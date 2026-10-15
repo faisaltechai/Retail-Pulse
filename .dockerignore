@@ -1,0 +1,40 @@
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Git
+.git/
+.gitignore
+
+# Tests and development dependencies
+tests/
+requirements_dev.txt
+.pytest_cache/
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# Logs
+logs/
+*.log
+
+# Raw dataset (large file, not needed for dashboard runtime)
+data/raw/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
