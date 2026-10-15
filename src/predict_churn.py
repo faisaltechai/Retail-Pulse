@@ -1,42 +1,44 @@
-
 import joblib
 import pandas as pd
 
-model = joblib.load("models/churn_adaboost.pkl")
-features = joblib.load("models/churn_features.pkl")
+# Load the trained model
+model = joblib.load("models/churn_logistic_regression.pkl")
 
-customers = {
-    "Recency": 120,
-    "Frequency": 4,
-    "Monetary": 1000,
-    "Total_Quantity": 23,
-    "Unique_Products": 5,
-    "Purchase_Months": 6,
-    "Customer_Lifetime": 120,
-    "Avg_Order_Value": 14.0,
-    "Average_Days_Between_Orders": 40.0
-}
+# Features used by the model
+features = ["Frequency", "Monetary"]
 
 
 def predict_customer_churn(customer_data):
     customer_df = pd.DataFrame([customer_data])
+
+    # Select the required features
     customer_df = customer_df[features]
 
-    prediction = model.predict(customer_df)
-    prediction_prob = model.predict_proba(customer_df)
+    # Make prediction
+    prediction = model.predict(customer_df)[0]
+    probabilities = model.predict_proba(customer_df)[0]
 
+    # Get churn probability for class 1
     class_1_index = list(model.classes_).index(1)
-    churn_probability = prediction_prob[0][class_1_index] * 100
+    churn_probability = probabilities[class_1_index] * 100
 
     return prediction, churn_probability
 
 
-result, churn_probability = predict_customer_churn(customers)
+if __name__ == "__main__":
+    # Sample customer data
+    customer = {
+        "Frequency": 4,
+        "Monetary": 1000
+    }
 
-if result[0] == 1:
-    print("The Customer is at risk of churn")
-else:
-    print("The Customer is not at risk of churn")
+    # Predict customer churn
+    result, churn_probability = predict_customer_churn(customer)
 
-print("Prediction:", result)
-print(f"Churn Probability: {churn_probability:.2f}%")
+    if result == 1:
+        print("The customer is at risk of churn.")
+    else:
+        print("The customer is not predicted to be at risk of churn.")
+
+    print("Prediction:", result)
+    print(f"Churn Probability: {churn_probability:.2f}%")
